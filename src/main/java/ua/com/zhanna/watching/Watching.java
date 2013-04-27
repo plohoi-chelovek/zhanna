@@ -1,15 +1,23 @@
 package ua.com.zhanna.watching;
 
 import java.nio.file.*;
+import java.nio.file.attribute.*;
+
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.LinkOption.*;
-import java.nio.file.attribute.*;
+
 import java.io.*;
+
 import java.util.*;
 
-class Watching {
+import javax.swing.event.*;
+
+
+class Watching extends Thread {
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
+
+    private EventListenerList listeners = new EventListenerList();
 
     public Watching(String dir) throws IOException {
 	this.watcher = FileSystems.getDefault().newWatchService();
@@ -17,7 +25,7 @@ class Watching {
 	register(Paths.get(dir));
     }
 
-    public void start() {
+    public void run() {
 	try {
 	    while (true) {
 		/* get key */
@@ -43,14 +51,12 @@ class Watching {
 		continue;
 	    } else if (kind == ENTRY_CREATE) {
 		WatchEvent<Path> ev = cast(event);
-		Path name = ev.context();
-		// Path child = dir.resolve(name);
-		System.out.println(name);
-		break;
+		fireEntryIsCreated(keys.get(key).resolve(ev.context()));
 	    }
 	}
 	return key.reset();
     }
+
 
     @SuppressWarnings("unchecked")
     <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -62,9 +68,35 @@ class Watching {
 	keys.put(key, dir);
     }
 
+    
+    public void addWatchingListener(WatchingListener l) {
+	listeners.add(WatchingListener.class, l);
+    }
+
+    public void removeWatchingListener(WatchingListener l) {
+	listeners.remove(WatchingListener.class, l);
+    }
+    
+    private void fireEntryIsCreated(Path entry) {
+	EntryEvent event = new EntryEvent(this, entry);
+	Object[] l = listeners.getListenerList();
+	for (int i = l.length-2; i>=0; i-=2) {
+	    if (l[i]==WatchingListener.class) {
+		((WatchingListener)l[i+1]).entryIsCreated(event);
+	    }
+	}
+    }
+
     /* TEST THIS SUBSYSTEM */
     public static void main(String args[]) throws IOException {
-	new Watching(args[0]).start();
+	Watching simpleWatching = new Watching(args[0]);
+	simpleWatching.addWatchingListener(new WatchingListener() {
+		public void entryIsCreated(EntryEvent e) {
+		    System.out.println(e.getEntry());
+		}
+	    });
+	simpleWatching.start();
+	System.out.println("Some message from main thread");
     }
 }    
 
