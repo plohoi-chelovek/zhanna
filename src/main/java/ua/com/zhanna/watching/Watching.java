@@ -37,30 +37,34 @@ class Watching {
     }
 
     private boolean processKeyEvents(WatchKey key) {
-	// for (WatchEvent<?> event: key.pollEvents()) {
-	//     WatchEvent.Kind kind = event.kind();
-	//     // TBD - provide example of how OVERFLOW event is handled
-	//     if (kind == OVERFLOW) {
-	// 	continue;
-	//     }
-	//     // Context for directory entry event is the file name of entry
-	//     WatchEvent<Path> ev = cast(event);
-	//     Path name = ev.context();
-	//     Path child = dir.resolve(name);
-
-	//     if (!key.reset()) {
-	// 	keys.remove(key);
-	// 	if (keys.isEmpty())
-	// 	    break;
-	//     }
-	return true;
+	for (WatchEvent<?> event: key.pollEvents()) {
+	    WatchEvent.Kind kind = event.kind();
+	    if (kind == OVERFLOW) {
+		continue;
+	    } else if (kind == ENTRY_CREATE) {
+		WatchEvent<Path> ev = cast(event);
+		Path name = ev.context();
+		// Path child = dir.resolve(name);
+		System.out.println(name);
+		break;
+	    }
+	}
+	return key.reset();
     }
 
-	
+    @SuppressWarnings("unchecked")
+    <T> WatchEvent<T> cast(WatchEvent<?> event) {
+        return (WatchEvent<T>)event;
+    }
 
     private void register(Path dir) throws IOException {
 	WatchKey key = dir.register(watcher, ENTRY_CREATE);
 	keys.put(key, dir);
+    }
+
+    /* TEST THIS SUBSYSTEM */
+    public static void main(String args[]) throws IOException {
+	new Watching(args[0]).start();
     }
 }    
 
