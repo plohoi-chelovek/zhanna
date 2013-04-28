@@ -20,9 +20,21 @@ class Watching extends Thread {
     private EventListenerList listeners = new EventListenerList();
 
     public Watching(String dir) throws IOException {
+	this(new File(dir));
+    }
+
+    public Watching(File dir) throws IOException {
 	this.watcher = FileSystems.getDefault().newWatchService();
 	this.keys = new HashMap<WatchKey,Path>();
-	register(Paths.get(dir));
+	register(Paths.get(dir.toURI()));
+    }
+
+    public boolean cancel() {
+	keys.keySet().iterator().next().cancel();
+	try {
+	    watcher.close();
+	} catch (IOException e) { return false; }
+	return true;
     }
 
     public void run() {
@@ -36,11 +48,15 @@ class Watching extends Thread {
 		/* if we are here then we get events associated with register dir
 		 * its time to process it 
 		 */
-		if (!processKeyEvents(key))
-		    break; //and maybe fire some thing
+		if (!processKeyEvents(key)) {
+		    fireWatchKeyError(key); //some thing bad is hapenning
+		    break;
+		}
 	    }
 	} catch (InterruptedException x) {
-	    return; //fire some thing?;
+	    fireInterruptedError(x.getMessage());
+	} catch (ClosedWatchServiceException x) {
+	    fireInterruptedError(x.getMessage());
 	}
     }
 
@@ -87,16 +103,41 @@ class Watching extends Thread {
 	}
     }
 
+    private void fireInterruptedError(String message) {
+	ErrorEvent event = new ErrorEvent(this, message);
+	Object[] l = listeners.getListenerList();
+	for (int i = l.length-2; i>=0; i-=2) {
+	    if (l[i]==WatchingListener.class) {
+		((WatchingListener)l[i+1]).interruptedError(event);
+	    }
+	}
+    }
+
+    private void fireWatchKeyError(WatchKey key) {
+	ErrorEvent event = new ErrorEvent(this, key);
+	Object[] l = listeners.getListenerList();
+	for (int i = l.length-2; i>=0; i-=2) {
+	    if (l[i]==WatchingListener.class) {
+		((WatchingListener)l[i+1]).watchKeyError(event);
+	    }
+	}
+    }
+
     /* TEST THIS SUBSYSTEM */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, InterruptedException {
 	Watching simpleWatching = new Watching(args[0]);
 	simpleWatching.addWatchingListener(new WatchingListener() {
 		public void entryIsCreated(EntryEvent e) {
 		    System.out.println(e.getEntry());
 		}
+		public void interruptedError(ErrorEvent event) {
+		    System.out.println("interruptedError");
+		}
+		public void watchKeyError(ErrorEvent event) {
+		    System.out.println("watchKeyError");
+		}
 	    });
 	simpleWatching.start();
-	System.out.println("Some message from main thread");
     }
 }    
 
