@@ -27,7 +27,7 @@
         <configuration>
 	  <mainClass>ua.com.zhanna.Application</mainClass>
 	  <arguments>
-            <argument>input.txt</argument>
+            <argument>/home/ast/Junk</argument>
           </arguments>
 	</configuration>
       </plugin>
