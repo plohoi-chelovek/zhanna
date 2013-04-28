@@ -1,8 +1,8 @@
 package ua.com.zhanna.operation;
 
-import java.io.*;
+import java.nio.file.*;
 
 public interface Operation {
-    public File operate(File input);
+    public Path operate(Path input);
 }
 	
