@@ -7,6 +7,10 @@
   <version>1.0-SNAPSHOT</version>
   <name>zhanna</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
   <build>
     <plugins>
       <plugin>
@@ -21,9 +25,9 @@
 	  </execution>
 	</executions>
         <configuration>
-	  <mainClass>ua.com.zhanna.watching.Watching</mainClass>
+	  <mainClass>ua.com.zhanna.operation.EncodingOperation</mainClass>
 	  <arguments>
-            <argument>/home/ast/Junk</argument>
+            <argument>/home/ast/Junk/BOLN_22.TXT</argument>
           </arguments>
 	</configuration>
       </plugin>
