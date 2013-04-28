@@ -27,7 +27,7 @@
         <configuration>
 	  <mainClass>ua.com.zhanna.operation.EncodingOperation</mainClass>
 	  <arguments>
-            <argument>/home/ast/Junk/BOLN_22.TXT</argument>
+            <argument>input.txt</argument>
           </arguments>
 	</configuration>
       </plugin>

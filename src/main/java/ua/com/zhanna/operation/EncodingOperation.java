@@ -20,13 +20,12 @@ public class EncodingOperation implements Operation {
     }
 
     public Path operate(Path input) {
-	/* create temp file, fill it, replace it with input, and finally return it. 
+	/* create temp file, fill it with text in new encoding, and return it. 
 	 * if some thing goes wrong return null
 	 */
 	try {
 	    Path temp = createTempFile();
 	    fillTempFile(temp, input);
-	    replace(temp, input);
 	    return temp;
 	} catch (Exception e) { return null; }
     }
@@ -45,14 +44,10 @@ public class EncodingOperation implements Operation {
 	    }
     }
 
-    private void replace(Path temp, Path input) throws IOException {
-	Files.delete(input);
-	Files.move(temp, input);
-    }
-
     /* TEST THIS */
     public static void main(String[] args) {
-	new EncodingOperation("CP866").operate(Paths.get(args[0]));
+	if (new EncodingOperation("CP866").operate(Paths.get(args[0])) == null)
+	    System.out.println("some bad thing");
     }
 }
 
