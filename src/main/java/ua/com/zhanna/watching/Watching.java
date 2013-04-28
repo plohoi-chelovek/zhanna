@@ -37,6 +37,14 @@ class Watching extends Thread {
 	return true;
     }
 
+    public boolean cancel() {
+	keys.keySet().iterator().next().cancel();
+	try {
+	    watcher.close();
+	} catch (IOException e) { return false; }
+	return true;
+    }
+
     public void run() {
 	try {
 	    while (true) {
