@@ -12,7 +12,7 @@ import javax.swing.text.*;
 
 import org.pmw.tinylog.Logger;
 
-class Printing {
+public class Printing {
     public void print(final Path path) {
 	SwingUtilities.invokeLater(new Runnable() {
 		public void run() {
