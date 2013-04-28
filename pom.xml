@@ -14,6 +14,17 @@
   <build>
     <plugins>
       <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<configuration>
+	  <archive>
+	    <manifest>
+              <mainClass>ua.com.zhanna.Application</mainClass>
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.2.1</version>
@@ -27,9 +38,8 @@
         <configuration>
 	  <mainClass>ua.com.zhanna.Application</mainClass>
 	  <arguments>
-	    <argument>--help</argument> 
-	    <!-- <argument>CP866</argument> -->
-            <!-- <argument>/home/ast/Junk</argument> -->
+	    <argument>CP866</argument>
+            <argument>/home/ast/Junk</argument>
           </arguments>
 	</configuration>
       </plugin>
