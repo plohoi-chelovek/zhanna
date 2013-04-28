@@ -13,7 +13,7 @@ import java.util.*;
 import javax.swing.event.*;
 
 
-class Watching extends Thread {
+public class Watching extends Thread {
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
 
