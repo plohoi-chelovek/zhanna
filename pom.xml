@@ -27,7 +27,9 @@
         <configuration>
 	  <mainClass>ua.com.zhanna.Application</mainClass>
 	  <arguments>
-            <argument>/home/ast/Junk</argument>
+	    <argument>--help</argument> 
+	    <!-- <argument>CP866</argument> -->
+            <!-- <argument>/home/ast/Junk</argument> -->
           </arguments>
 	</configuration>
       </plugin>
