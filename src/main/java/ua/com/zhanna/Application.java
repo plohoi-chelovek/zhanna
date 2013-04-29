@@ -30,7 +30,7 @@ public class Application {
     public void start() {
 	watching.addWatchingListener(new WatchingListener() {
 		public void entryIsCreated(EntryEvent e) {
-		    printing.print(operation.operate(e.getEntry()));
+			printing.print(operation.operate(e.getEntry()));
 		}
 		public void interruptedError(ErrorEvent event) {
 		    Logger.error("interrupted error");

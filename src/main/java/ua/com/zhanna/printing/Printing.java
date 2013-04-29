@@ -5,6 +5,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.charset.*;
 
+import java.awt.*;
 import java.awt.print.*;
 
 import javax.swing.*;
@@ -17,8 +18,9 @@ public class Printing {
 	SwingUtilities.invokeLater(new Runnable() {
 		public void run() {
 		    JTextArea textArea = new JTextArea();
+		    textArea.setPreferredSize(new Dimension(10024, 10024));
 		    try (BufferedReader reader = 
-			 Files.newBufferedReader(path, Charset.defaultCharset())) {
+			 Files.newBufferedReader(path, Charset.forName("UTF-8"))) {
 			    String line = null;
 			    while ((line = reader.readLine()) != null) {
 				textArea.append(line + System.lineSeparator());

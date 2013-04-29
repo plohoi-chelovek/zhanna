@@ -36,7 +36,7 @@ public class EncodingOperation implements Operation {
 
     private void fillTempFile(Path tmp, Path input) throws IOException {
 	try (BufferedReader reader = Files.newBufferedReader(input, charset);
-	     BufferedWriter writer = Files.newBufferedWriter(tmp, Charset.defaultCharset())) {
+	     BufferedWriter writer = Files.newBufferedWriter(tmp, Charset.forName("UTF-8"))) {
 		PrintWriter out = new PrintWriter(writer);
 		String line = null;
 		while ((line = reader.readLine()) != null)
